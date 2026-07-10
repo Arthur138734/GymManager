@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>GymManager - Treinos</title>
+
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/treinos.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <section class="form-card">
+
+        <h1>Cadastro de Treinos</h1>
+
+        <form id="trainingForm">
+
+            <div class="form-group">
+
+                <label>Aluno</label>
+
+                <select id="aluno" required>
+
+                    <option value="">Selecione um aluno</option>
+
+                </select>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Professor</label>
+
+                <select id="professor" required>
+
+                    <option value="">Selecione um professor</option>
+
+                </select>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Nome do Treino</label>
+
+                <input
+                    type="text"
+                    id="nomeTreino"
+                    placeholder="Ex: Hipertrofia A"
+                    required>
+
+            </div>
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label>Exercício</label>
+
+                    <input
+                        type="text"
+                        id="exercicio"
+                        placeholder="Ex: Supino Reto"
+                        required>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Séries</label>
+
+                    <input
+                        type="number"
+                        id="series"
+                        min="1"
+                        required>
+
+                </div>
+
+            </div>
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label>Repetições</label>
+
+                    <input
+                        type="number"
+                        id="repeticoes"
+                        min="1"
+                        required>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Descanso (segundos)</label>
+
+                    <input
+                        type="number"
+                        id="descanso"
+                        min="0"
+                        required>
+
+                </div>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Observações</label>
+
+                <textarea
+                    id="observacoes"
+                    rows="4"
+                    placeholder="Informações adicionais..."></textarea>
+
+            </div>
+
+            <div class="buttons">
+
+                <button type="submit">
+
+                    Salvar
+
+                </button>
+
+                <button type="reset">
+
+                    Limpar
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+    <section class="table-card">
+
+        <h2>Treinos Cadastrados</h2>
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Aluno</th>
+                    <th>Professor</th>
+                    <th>Treino</th>
+                    <th>Exercício</th>
+                    <th>Ações</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="trainingTable">
+
+            </tbody>
+
+        </table>
+
+    </section>
+
+</div>
+
+<script src="js/treinos.js"></script>
+
+</body>
+
+</html>
