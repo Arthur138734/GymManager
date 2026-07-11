@@ -8,6 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/alunos")
+@CrossOrigin(origins = "*")
 public class AlunoController {
 
     private final AlunoService service;
@@ -32,8 +33,7 @@ public class AlunoController {
     }
 
     @PutMapping("/{id}")
-    public Aluno atualizar(@PathVariable Long id,
-                           @RequestBody Aluno aluno) {
+    public Aluno atualizar(@PathVariable Long id, @RequestBody Aluno aluno) {
         return service.atualizar(id, aluno);
     }
 
