@@ -60,61 +60,17 @@
 
             </div>
 
-            <div class="form-row">
+<div class="form-group">
 
-                <div class="form-group">
+        <label>Objetivo</label>
 
-                    <label>Exercício</label>
+            <input
+                    type="text"
+                            id="objetivo"
+                                    placeholder="Hipertrofia, Emagrecimento, Resistência..."
+                                            required>
 
-                    <input
-                        type="text"
-                        id="exercicio"
-                        placeholder="Ex: Supino Reto"
-                        required>
-
-                </div>
-
-                <div class="form-group">
-
-                    <label>Séries</label>
-
-                    <input
-                        type="number"
-                        id="series"
-                        min="1"
-                        required>
-
-                </div>
-
-            </div>
-
-            <div class="form-row">
-
-                <div class="form-group">
-
-                    <label>Repetições</label>
-
-                    <input
-                        type="number"
-                        id="repeticoes"
-                        min="1"
-                        required>
-
-                </div>
-
-                <div class="form-group">
-
-                    <label>Descanso (segundos)</label>
-
-                    <input
-                        type="number"
-                        id="descanso"
-                        min="0"
-                        required>
-
-                </div>
-
-            </div>
+                                            </div>
 
             <div class="form-group">
 
@@ -153,19 +109,16 @@
 
         <table>
 
-            <thead>
-
-                <tr>
-
-                    <th>Aluno</th>
-                    <th>Professor</th>
-                    <th>Treino</th>
-                    <th>Exercício</th>
-                    <th>Ações</th>
-
-                </tr>
-
-            </thead>
+<thead>
+    <tr>
+        <th>Aluno</th>
+        <th>Professor</th>
+        <th>Treino</th>
+        <th>Objetivo</th>
+        <th>Status</th>
+        <th>Ações</th>
+    </tr>
+</thead>
 
             <tbody id="trainingTable">
 
