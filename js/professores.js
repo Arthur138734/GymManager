@@ -1,98 +1,53 @@
 // ===============================
-// GymManager - Professores
+// GymManager - Cadastro de Professores
 // ===============================
 
-// Formulário
+// URL da API
+const API_URL = "https://gymmanager-production-53e7.up.railway.app/professores";
+
+// Elementos
 const teacherForm = document.getElementById("teacherForm");
-
-// Tabela
 const teachersTable = document.getElementById("teachersTable");
-
-// Pesquisa
 const searchTeacher = document.getElementById("searchTeacher");
 
 // Lista
-let teachers = JSON.parse(localStorage.getItem("teachers")) || [];
-
+let teachers = [];
 let editingId = null;
 
-// Inicialização
-renderTeachers();
+// ===============================
+// Carregar professores
+// ===============================
 
-// Pesquisa
-searchTeacher.addEventListener("input", function () {
-    renderTeachers(searchTeacher.value);
-});
+async function carregarProfessores() {
 
-// Cadastro
-teacherForm.addEventListener("submit", function (event) {
+    try {
 
-    event.preventDefault();
+        const response = await fetch(API_URL);
 
-    const teacher = {
+        teachers = await response.json();
 
-        id: Date.now(),
+        renderTeachers(searchTeacher.value);
 
-        nome: document.getElementById("nome").value,
+    } catch (error) {
 
-        cpf: document.getElementById("cpf").value,
+        console.error(error);
 
-        telefone: document.getElementById("telefone").value,
-
-        email: document.getElementById("email").value,
-
-        especialidade: document.getElementById("especialidade").value,
-
-        cref: document.getElementById("cref").value,
-
-        salario: document.getElementById("salario").value,
-
-        status: document.getElementById("status").value
-
-    };
-
-    if(editingId === null){
-
-        teachers.push(teacher);
-
-    }else{
-
-        const index = teachers.findIndex(t => t.id === editingId);
-
-        teacher.id = editingId;
-
-        teachers[index] = teacher;
-
-        editingId = null;
-
-        teacherForm.querySelector("button[type='submit']").textContent = "Salvar";
+        alert("Erro ao carregar professores.");
 
     }
 
-    saveTeachers();
-
-    renderTeachers();
-
-    teacherForm.reset();
-
-});
-
-function saveTeachers(){
-
-    localStorage.setItem("teachers", JSON.stringify(teachers));
-
 }
 
-function renderTeachers(search = ""){
+// ===============================
+// Mostrar professores
+// ===============================
+
+function renderTeachers(search = "") {
 
     teachersTable.innerHTML = "";
 
     const filtered = teachers.filter(teacher =>
-
-        teacher.nome
-            .toLowerCase()
-            .includes(search.toLowerCase())
-
+        teacher.nome.toLowerCase().includes(search.toLowerCase())
     );
 
     filtered.forEach(teacher => {
@@ -100,35 +55,22 @@ function renderTeachers(search = ""){
         const row = document.createElement("tr");
 
         row.innerHTML = `
-
             <td>${teacher.nome}</td>
-
             <td>${teacher.especialidade}</td>
-
             <td>${teacher.cref}</td>
-
             <td>${teacher.status}</td>
 
             <td>
 
-                <button
-                    class="edit-btn"
-                    data-id="${teacher.id}">
-
+                <button class="edit-btn" data-id="${teacher.id}">
                     Editar
-
                 </button>
 
-                <button
-                    class="delete-btn"
-                    data-id="${teacher.id}">
-
+                <button class="delete-btn" data-id="${teacher.id}">
                     Excluir
-
                 </button>
 
             </td>
-
         `;
 
         teachersTable.appendChild(row);
@@ -137,47 +79,156 @@ function renderTeachers(search = ""){
 
 }
 
-teachersTable.addEventListener("click", function(event){
+// ===============================
+// Pesquisa
+// ===============================
 
-    const button = event.target;
+searchTeacher.addEventListener("input", () => {
 
-    const id = Number(button.dataset.id);
+    renderTeachers(searchTeacher.value);
 
-    if(button.classList.contains("delete-btn")){
+});
 
-        deleteTeacher(id);
+// ===============================
+// Salvar / Atualizar
+// ===============================
 
-    }
+teacherForm.addEventListener("submit", async function (event) {
 
-    if(button.classList.contains("edit-btn")){
+    event.preventDefault();
 
-        editTeacher(id);
+    const teacher = {
+
+        nome: document.getElementById("nome").value,
+        cpf: document.getElementById("cpf").value,
+        telefone: document.getElementById("telefone").value,
+        email: document.getElementById("email").value,
+        especialidade: document.getElementById("especialidade").value,
+        cref: document.getElementById("cref").value,
+        salario: parseFloat(document.getElementById("salario").value),
+        status: document.getElementById("status").value
+
+    };
+
+    try {
+
+        if (editingId == null) {
+
+            await fetch(API_URL, {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify(teacher)
+
+            });
+
+            alert("Professor cadastrado!");
+
+        } else {
+
+            await fetch(`${API_URL}/${editingId}`, {
+
+                method: "PUT",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify(teacher)
+
+            });
+
+            alert("Professor atualizado!");
+
+            editingId = null;
+
+            teacherForm.querySelector("button[type='submit']").textContent = "Salvar";
+
+        }
+
+        teacherForm.reset();
+
+        carregarProfessores();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Erro ao salvar professor.");
 
     }
 
 });
 
-function deleteTeacher(id){
+// ===============================
+// Eventos da tabela
+// ===============================
 
-    if(!confirm("Deseja excluir este professor?")){
+teachersTable.addEventListener("click", function (event) {
+
+    const button = event.target;
+
+    const id = Number(button.dataset.id);
+
+    if (button.classList.contains("edit-btn")) {
+
+        editTeacher(id);
+
+    }
+
+    if (button.classList.contains("delete-btn")) {
+
+        deleteTeacher(id);
+
+    }
+
+});
+
+// ===============================
+// Excluir
+// ===============================
+
+async function deleteTeacher(id) {
+
+    if (!confirm("Deseja excluir este professor?")) {
 
         return;
 
     }
 
-    teachers = teachers.filter(teacher => teacher.id !== id);
+    try {
 
-    saveTeachers();
+        await fetch(`${API_URL}/${id}`, {
 
-    renderTeachers();
+            method: "DELETE"
+
+        });
+
+        carregarProfessores();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Erro ao excluir professor.");
+
+    }
 
 }
 
-function editTeacher(id){
+// ===============================
+// Editar
+// ===============================
 
-    const teacher = teachers.find(teacher => teacher.id === id);
+function editTeacher(id) {
 
-    if(!teacher){
+    const teacher = teachers.find(t => t.id === id);
+
+    if (!teacher) {
 
         return;
 
@@ -192,8 +243,14 @@ function editTeacher(id){
     document.getElementById("salario").value = teacher.salario;
     document.getElementById("status").value = teacher.status;
 
-    editingId = id;
+    editingId = teacher.id;
 
     teacherForm.querySelector("button[type='submit']").textContent = "Atualizar";
 
 }
+
+// ===============================
+// Inicialização
+// ===============================
+
+carregarProfessores();
