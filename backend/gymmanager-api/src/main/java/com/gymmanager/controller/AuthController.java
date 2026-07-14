@@ -42,6 +42,16 @@ public class AuthController {
         return "Solicitação de recuperação enviada com sucesso.";
     }
 
+    @PostMapping("/nova-senha")
+public Usuario novaSenha(@RequestBody Usuario usuario) {
+
+    return service.alterarSenha(
+            usuario.getEmail(),
+            usuario.getSenha()
+    );
+
+}
+
 }
                                                 
                             

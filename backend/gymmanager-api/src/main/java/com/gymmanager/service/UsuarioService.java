@@ -43,6 +43,16 @@ public class UsuarioService {
                                                         .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
                             }
 
+                            public Usuario alterarSenha(String email, String novaSenha) {
+
+    Usuario usuario = repository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
+
+    usuario.setSenha(novaSenha);
+
+    return repository.save(usuario);
+}
+
                                 public void excluir(Long id) {
                                             repository.deleteById(id);
                                 }
