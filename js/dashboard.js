@@ -1,63 +1,77 @@
-// ====================================
-// Dashboard GymManager
-// ====================================
+// ===============================
+// GymManager - Dashboard
+// ===============================
 
-loadDashboard();
+// URLs da API
+const API_ALUNOS = "https://gymmanager-production-53e7.up.railway.app/alunos";
+const API_PROFESSORES = "https://gymmanager-production-53e7.up.railway.app/professores";
+const API_TREINOS = "https://gymmanager-production-53e7.up.railway.app/treinos";
+const API_PAGAMENTOS = "https://gymmanager-production-53e7.up.railway.app/pagamentos";
 
-function loadDashboard(){
+async function carregarDashboard() {
 
-    const students =
-        JSON.parse(localStorage.getItem("students")) || [];
+    try {
 
-    const teachers =
-        JSON.parse(localStorage.getItem("teachers")) || [];
+        const [
+            alunosRes,
+            professoresRes,
+            treinosRes,
+            pagamentosRes
+        ] = await Promise.all([
+            fetch(API_ALUNOS),
+            fetch(API_PROFESSORES),
+            fetch(API_TREINOS),
+            fetch(API_PAGAMENTOS)
+        ]);
 
-    const trainings =
-        JSON.parse(localStorage.getItem("trainings")) || [];
+        if (!alunosRes.ok) throw new Error("Erro ao carregar alunos.");
+        if (!professoresRes.ok) throw new Error("Erro ao carregar professores.");
+        if (!treinosRes.ok) throw new Error("Erro ao carregar treinos.");
+        if (!pagamentosRes.ok) throw new Error("Erro ao carregar pagamentos.");
 
-    const payments =
-        JSON.parse(localStorage.getItem("payments")) || [];
+        const alunos = await alunosRes.json();
+        const professores = await professoresRes.json();
+        const treinos = await treinosRes.json();
+        const pagamentos = await pagamentosRes.json();
 
-    document.getElementById("totalAlunos").textContent =
-        students.length;
+        // Cards
+        document.getElementById("totalAlunos").textContent = alunos.length;
+        document.getElementById("totalProfessores").textContent = professores.length;
+        document.getElementById("totalTreinos").textContent = treinos.length;
 
-    document.getElementById("totalProfessores").textContent =
-        teachers.length;
+        let receita = 0;
+        let pendentes = 0;
+        let pagos = 0;
 
-    document.getElementById("totalTreinos").textContent =
-        trainings.length;
+        pagamentos.forEach(pagamento => {
 
-    const pagos =
-        payments.filter(payment =>
-            payment.status === "Pago"
-        );
+            if (pagamento.status === "Pago") {
+                receita += Number(pagamento.valor);
+                pagos++;
+            }
 
-    const pendentes =
-        payments.filter(payment =>
-            payment.status === "Pendente"
-        );
-
-    const receita = pagos.reduce(
-
-        (total, payment) => total + payment.valor,
-
-        0
-
-    );
-
-    document.getElementById("receitaTotal").textContent =
-        receita.toLocaleString("pt-BR", {
-
-            style:"currency",
-
-            currency:"BRL"
+            if (pagamento.status === "Pendente") {
+                pendentes++;
+            }
 
         });
 
-    document.getElementById("pagamentosPendentes").textContent =
-        pendentes.length;
+        document.getElementById("receitaTotal").textContent =
+            "R$ " + receita.toFixed(2);
 
-    document.getElementById("pagamentosPagos").textContent =
-        pagos.length;
+        document.getElementById("pagamentosPendentes").textContent =
+            pendentes;
+
+        document.getElementById("pagamentosPagos").textContent =
+            pagos;
+
+    } catch (error) {
+
+        console.error(error);
+        alert(error.message);
+
+    }
 
 }
+
+carregarDashboard();

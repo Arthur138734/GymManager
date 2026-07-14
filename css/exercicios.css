@@ -1,0 +1,168 @@
+/* ===============================
+   GymManager - Exercícios
+   =============================== */
+
+   .container {
+       max-width: 1200px;
+           margin: 30px auto;
+               display: flex;
+                   gap: 25px;
+                       align-items: flex-start;
+                       }
+
+                       .form-card,
+                       .table-card {
+                           background: #ffffff;
+                               border-radius: 10px;
+                                   padding: 25px;
+                                       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                                       }
+
+                                       .form-card {
+                                           flex: 1;
+                                           }
+
+                                           .table-card {
+                                               flex: 2;
+                                               }
+
+                                               h1,
+                                               h2 {
+                                                   margin-bottom: 20px;
+                                                       color: #1f2937;
+                                                       }
+
+                                                       .form-group {
+                                                           display: flex;
+                                                               flex-direction: column;
+                                                                   margin-bottom: 18px;
+                                                                   }
+
+                                                                   .form-row {
+                                                                       display: flex;
+                                                                           gap: 15px;
+                                                                           }
+
+                                                                           .form-row .form-group {
+                                                                               flex: 1;
+                                                                               }
+
+                                                                               label {
+                                                                                   margin-bottom: 6px;
+                                                                                       font-weight: 600;
+                                                                                       }
+
+                                                                                       input,
+                                                                                       select,
+                                                                                       textarea {
+                                                                                           padding: 10px;
+                                                                                               border: 1px solid #d1d5db;
+                                                                                                   border-radius: 6px;
+                                                                                                       font-size: 15px;
+                                                                                                           outline: none;
+                                                                                                           }
+
+                                                                                                           input:focus,
+                                                                                                           select:focus,
+                                                                                                           textarea:focus {
+                                                                                                               border-color: #2563eb;
+                                                                                                               }
+
+                                                                                                               textarea {
+                                                                                                                   resize: vertical;
+                                                                                                                   }
+
+                                                                                                                   .buttons {
+                                                                                                                       display: flex;
+                                                                                                                           gap: 10px;
+                                                                                                                               margin-top: 20px;
+                                                                                                                               }
+
+                                                                                                                               .buttons button {
+                                                                                                                                   flex: 1;
+                                                                                                                                       padding: 12px;
+                                                                                                                                           border: none;
+                                                                                                                                               border-radius: 6px;
+                                                                                                                                                   cursor: pointer;
+                                                                                                                                                       font-size: 15px;
+                                                                                                                                                           font-weight: bold;
+                                                                                                                                                               transition: 0.3s;
+                                                                                                                                                               }
+
+                                                                                                                                                               .buttons button[type="submit"] {
+                                                                                                                                                                   background: #2563eb;
+                                                                                                                                                                       color: white;
+                                                                                                                                                                       }
+
+                                                                                                                                                                       .buttons button[type="submit"]:hover {
+                                                                                                                                                                           background: #1d4ed8;
+                                                                                                                                                                           }
+
+                                                                                                                                                                           .buttons button[type="reset"] {
+                                                                                                                                                                               background: #6b7280;
+                                                                                                                                                                                   color: white;
+                                                                                                                                                                                   }
+
+                                                                                                                                                                                   .buttons button[type="reset"]:hover {
+                                                                                                                                                                                       background: #4b5563;
+                                                                                                                                                                                       }
+
+                                                                                                                                                                                       table {
+                                                                                                                                                                                           width: 100%;
+                                                                                                                                                                                               border-collapse: collapse;
+                                                                                                                                                                                               }
+
+                                                                                                                                                                                               table thead {
+                                                                                                                                                                                                   background: #2563eb;
+                                                                                                                                                                                                       color: white;
+                                                                                                                                                                                                       }
+
+                                                                                                                                                                                                       table th,
+                                                                                                                                                                                                       table td {
+                                                                                                                                                                                                           padding: 12px;
+                                                                                                                                                                                                               text-align: center;
+                                                                                                                                                                                                                   border-bottom: 1px solid #e5e7eb;
+                                                                                                                                                                                                                   }
+
+                                                                                                                                                                                                                   .edit-btn,
+                                                                                                                                                                                                                   .delete-btn {
+                                                                                                                                                                                                                       border: none;
+                                                                                                                                                                                                                           padding: 8px 14px;
+                                                                                                                                                                                                                               border-radius: 5px;
+                                                                                                                                                                                                                                   cursor: pointer;
+                                                                                                                                                                                                                                       color: white;
+                                                                                                                                                                                                                                           margin: 2px;
+                                                                                                                                                                                                                                           }
+
+                                                                                                                                                                                                                                           .edit-btn {
+                                                                                                                                                                                                                                               background: #f59e0b;
+                                                                                                                                                                                                                                               }
+
+                                                                                                                                                                                                                                               .edit-btn:hover {
+                                                                                                                                                                                                                                                   background: #d97706;
+                                                                                                                                                                                                                                                   }
+
+                                                                                                                                                                                                                                                   .delete-btn {
+                                                                                                                                                                                                                                                       background: #dc2626;
+                                                                                                                                                                                                                                                       }
+
+                                                                                                                                                                                                                                                       .delete-btn:hover {
+                                                                                                                                                                                                                                                           background: #b91c1c;
+                                                                                                                                                                                                                                                           }
+
+                                                                                                                                                                                                                                                           @media (max-width: 900px) {
+
+                                                                                                                                                                                                                                                               .container {
+                                                                                                                                                                                                                                                                       flex-direction: column;
+                                                                                                                                                                                                                                                                               padding: 15px;
+                                                                                                                                                                                                                                                                                   }
+
+                                                                                                                                                                                                                                                                                       .form-row {
+                                                                                                                                                                                                                                                                                               flex-direction: column;
+                                                                                                                                                                                                                                                                                                   }
+
+                                                                                                                                                                                                                                                                                                       .table-card {
+                                                                                                                                                                                                                                                                                                               overflow-x: auto;
+                                                                                                                                                                                                                                                                                                                   }
+
+                                                                                                                                                                                                                                                                                                                   }

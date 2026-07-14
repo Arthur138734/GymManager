@@ -1,131 +1,93 @@
-// ========================================
-// GymManager - Treinos
-// ========================================
+// ===============================
+// GymManager - Cadastro de Treinos
+// ===============================
 
-// Formulário
+// URLs da API
+const API_TREINOS = "https://gymmanager-production-53e7.up.railway.app/treinos";
+const API_ALUNOS = "https://gymmanager-production-53e7.up.railway.app/alunos";
+const API_PROFESSORES = "https://gymmanager-production-53e7.up.railway.app/professores";
+
+// Elementos
 const trainingForm = document.getElementById("trainingForm");
+const trainingTable = document.getElementById("trainingTable");
 
-// Selects
 const alunoSelect = document.getElementById("aluno");
 const professorSelect = document.getElementById("professor");
 
-// Tabela
-const trainingTable = document.getElementById("trainingTable");
-
-// Dados
-let trainings = JSON.parse(localStorage.getItem("trainings")) || [];
-
-let students = JSON.parse(localStorage.getItem("students")) || [];
-
-let teachers = JSON.parse(localStorage.getItem("teachers")) || [];
-
+let treinos = [];
 let editingId = null;
+async function carregarAlunos() {
 
-// Inicialização
-loadStudents();
+    const response = await fetch(API_ALUNOS);
 
-loadTeachers();
+    const alunos = await response.json();
 
-renderTrainings();
+    alunoSelect.innerHTML =
+        '<option value="">Selecione um aluno</option>';
 
-function loadStudents(){
+    alunos.forEach(aluno => {
 
-    alunoSelect.innerHTML = `
-        <option value="">Selecione um aluno</option>
-    `;
-
-    students.forEach(student=>{
-
-        alunoSelect.innerHTML += `
-            <option value="${student.nome}">
-                ${student.nome}
-            </option>
-        `;
+        alunoSelect.innerHTML +=
+            `<option value="${aluno.nome}">${aluno.nome}</option>`;
 
     });
 
 }
 
-function loadTeachers(){
+async function carregarProfessores() {
 
-    professorSelect.innerHTML = `
-        <option value="">Selecione um professor</option>
-    `;
+    const response = await fetch(API_PROFESSORES);
 
-    teachers.forEach(teacher=>{
+    const professores = await response.json();
 
-        professorSelect.innerHTML += `
-            <option value="${teacher.nome}">
-                ${teacher.nome}
-            </option>
-        `;
+    professorSelect.innerHTML =
+        '<option value="">Selecione um professor</option>';
+
+    professores.forEach(professor => {
+
+        professorSelect.innerHTML +=
+            `<option value="${professor.nome}">${professor.nome}</option>`;
 
     });
 
 }
 
-trainingForm.addEventListener("submit", function(event){
+async function carregarTreinos() {
 
-    event.preventDefault();
+    const response = await fetch(API_TREINOS);
 
-    const training = {
+    treinos = await response.json();
 
-        id: Date.now(),
+    renderTreinos();
 
-        aluno: alunoSelect.value,
+}
 
-        professor: professorSelect.value,
-
-        nomeTreino: document.getElementById("nomeTreino").value,
-
-        exercicio: document.getElementById("exercicio").value,
-
-        series: document.getElementById("series").value,
-
-        repeticoes: document.getElementById("repeticoes").value,
-
-        descanso: document.getElementById("descanso").value,
-
-        observacoes: document.getElementById("observacoes").value
-
-    };
-
-    trainings.push(training);
-
-    localStorage.setItem("trainings", JSON.stringify(trainings));
-
-    renderTrainings();
-
-    trainingForm.reset();
-
-});
-
-function renderTrainings(){
+function renderTreinos() {
 
     trainingTable.innerHTML = "";
 
-    trainings.forEach(training => {
+    treinos.forEach(treino => {
 
         const row = document.createElement("tr");
 
         row.innerHTML = `
-
-            <td>${training.aluno}</td>
-
-            <td>${training.professor}</td>
-
-            <td>${training.nomeTreino}</td>
-
-            <td>${training.exercicio}</td>
+            <td>${treino.aluno}</td>
+            <td>${treino.professor}</td>
+            <td>${treino.nome}</td>
+            <td>${treino.objetivo}</td>
+            <td>${treino.status}</td>
 
             <td>
 
-                <button>Editar</button>
+                <button class="edit-btn" data-id="${treino.id}">
+                    Editar
+                </button>
 
-                <button>Excluir</button>
+                <button class="delete-btn" data-id="${treino.id}">
+                    Excluir
+                </button>
 
             </td>
-
         `;
 
         trainingTable.appendChild(row);
@@ -133,3 +95,166 @@ function renderTrainings(){
     });
 
 }
+
+// ===============================
+// Salvar / Atualizar
+// ===============================
+
+trainingForm.addEventListener("submit", async function (event) {
+
+    event.preventDefault();
+
+    const treino = {
+
+        nome: document.getElementById("nomeTreino").value,
+        aluno: alunoSelect.value,
+        professor: professorSelect.value,
+        objetivo: document.getElementById("objetivo").value,
+        observacoes: document.getElementById("observacoes").value,
+        status: "Ativo"
+
+    };
+
+    try {
+
+        if (editingId == null) {
+
+            await fetch(API_TREINOS, {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify(treino)
+
+            });
+
+            alert("Treino cadastrado!");
+
+        } else {
+
+            await fetch(`${API_TREINOS}/${editingId}`, {
+
+                method: "PUT",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify(treino)
+
+            });
+
+            alert("Treino atualizado!");
+
+            editingId = null;
+
+            trainingForm.querySelector("button[type='submit']").textContent = "Salvar";
+
+        }
+
+        trainingForm.reset();
+
+        carregarTreinos();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Erro ao salvar treino.");
+
+    }
+
+});
+
+// ===============================
+// Eventos da tabela
+// ===============================
+
+trainingTable.addEventListener("click", function (event) {
+
+    const button = event.target;
+
+    const id = Number(button.dataset.id);
+
+    if (button.classList.contains("edit-btn")) {
+
+        editTreino(id);
+
+    }
+
+    if (button.classList.contains("delete-btn")) {
+
+        deleteTreino(id);
+
+    }
+
+});
+
+// ===============================
+// Excluir
+// ===============================
+
+async function deleteTreino(id) {
+
+    if (!confirm("Deseja excluir este treino?")) {
+
+        return;
+
+    }
+
+    try {
+
+        await fetch(`${API_TREINOS}/${id}`, {
+
+            method: "DELETE"
+
+        });
+
+        carregarTreinos();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Erro ao excluir treino.");
+
+    }
+
+}
+
+// ===============================
+// Editar
+// ===============================
+
+function editTreino(id) {
+
+    const treino = treinos.find(t => t.id === id);
+
+    if (!treino) {
+
+        return;
+
+    }
+
+    document.getElementById("nomeTreino").value = treino.nome;
+    alunoSelect.value = treino.aluno;
+    professorSelect.value = treino.professor;
+    document.getElementById("objetivo").value = treino.objetivo;
+    document.getElementById("observacoes").value = treino.observacoes;
+
+    editingId = treino.id;
+
+    trainingForm.querySelector("button[type='submit']").textContent = "Atualizar";
+
+}
+
+// ===============================
+// Inicialização
+// ===============================
+
+carregarAlunos();
+carregarProfessores();
+carregarTreinos();
