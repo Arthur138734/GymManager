@@ -47,5 +47,12 @@ public class UsuarioService {
                                             repository.deleteById(id);
                                 }
 
+
+
+public boolean existeEmail(String email) {
+
+        return repository.existsByEmail(email);
+
+}
 }
                                 

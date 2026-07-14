@@ -9,28 +9,38 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*")
 public class AuthController {
 
-        private final UsuarioService service;
+    private final UsuarioService service;
 
-            public AuthController(UsuarioService service) {
-                        this.service = service;
-            }
+    public AuthController(UsuarioService service) {
+        this.service = service;
+    }
 
-                @PostMapping("/cadastro")
-                    public Usuario cadastrar(@RequestBody Usuario usuario) {
-                                return service.cadastrar(usuario);
-                    }
+    @PostMapping("/cadastro")
+    public Usuario cadastrar(@RequestBody Usuario usuario) {
+        return service.cadastrar(usuario);
+    }
 
-                        @PostMapping("/login")
-                            public Usuario login(@RequestBody Usuario usuario) {
+    @PostMapping("/login")
+    public Usuario login(@RequestBody Usuario usuario) {
 
-                                        Usuario usuarioBanco = service.buscarPorEmail(usuario.getEmail());
+        Usuario usuarioBanco = service.buscarPorEmail(usuario.getEmail());
 
-                                                if (!usuarioBanco.getSenha().equals(usuario.getSenha())) {
-                                                                throw new RuntimeException("E-mail ou senha inválidos.");
-                                                }
+        if (!usuarioBanco.getSenha().equals(usuario.getSenha())) {
+            throw new RuntimeException("E-mail ou senha inválidos.");
+        }
 
-                                                        return usuarioBanco;
-                            }
+        return usuarioBanco;
+    }
+
+    @PostMapping("/esqueci-senha")
+    public String esqueciSenha(@RequestBody Usuario usuario) {
+
+        if (!service.existeEmail(usuario.getEmail())) {
+            throw new RuntimeException("E-mail não encontrado.");
+        }
+
+        return "Solicitação de recuperação enviada com sucesso.";
+    }
 
 }
                                                 
