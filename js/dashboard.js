@@ -3,6 +3,19 @@
 // ===============================
 
 // URLs da API
+
+const usuario = JSON.parse(localStorage.getItem("usuario"));
+
+if (!usuario) {
+
+    alert("Faça login para acessar o sistema.");
+
+        window.location.href = "login.html";
+
+        }
+
+        document.getElementById("nomeUsuario").textContent = usuario.nome;
+
 const API_ALUNOS = "https://gymmanager-production-53e7.up.railway.app/alunos";
 const API_PROFESSORES = "https://gymmanager-production-53e7.up.railway.app/professores";
 const API_TREINOS = "https://gymmanager-production-53e7.up.railway.app/treinos";
@@ -75,3 +88,13 @@ async function carregarDashboard() {
 }
 
 carregarDashboard();
+
+document.getElementById("logout").addEventListener("click", function (event) {
+
+    event.preventDefault();
+
+    localStorage.removeItem("usuario");
+
+    window.location.href = "login.html";
+
+});

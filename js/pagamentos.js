@@ -2,6 +2,10 @@
 // GymManager - Pagamentos
 // ========================================
 
+// APIs
+const API_PAGAMENTOS = "https://gymmanager-production-53e7.up.railway.app/pagamentos";
+const API_ALUNOS = "https://gymmanager-production-53e7.up.railway.app/alunos";
+
 // Formulário
 const paymentForm = document.getElementById("paymentForm");
 
@@ -11,43 +15,124 @@ const alunoSelect = document.getElementById("aluno");
 // Tabela
 const paymentsTable = document.getElementById("paymentsTable");
 
-// Dados
-let payments = JSON.parse(localStorage.getItem("payments")) || [];
-
-let students = JSON.parse(localStorage.getItem("students")) || [];
+let payments = [];
 
 let editingId = null;
 
-// Inicialização
-loadStudents();
+// ========================================
+// Carregar Alunos
+// ========================================
 
-renderPayments();
+async function loadStudents() {
 
-function loadStudents(){
+    try {
 
-    alunoSelect.innerHTML = `
-        <option value="">Selecione um aluno</option>
-    `;
+        const response = await fetch(API_ALUNOS);
 
-    students.forEach(student=>{
+        const alunos = await response.json();
 
-        alunoSelect.innerHTML += `
-            <option value="${student.nome}">
-                ${student.nome}
-            </option>
+        alunoSelect.innerHTML =
+            '<option value="">Selecione um aluno</option>';
+
+        alunos.forEach(aluno => {
+
+            alunoSelect.innerHTML += `
+                <option value="${aluno.nome}">
+                    ${aluno.nome}
+                </option>
+            `;
+
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Erro ao carregar alunos.");
+
+    }
+
+}
+
+// ========================================
+// Carregar Pagamentos
+// ========================================
+
+async function loadPayments() {
+
+    try {
+
+        const response = await fetch(API_PAGAMENTOS);
+
+        payments = await response.json();
+
+        renderPayments();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Erro ao carregar pagamentos.");
+
+    }
+
+}
+
+// ========================================
+// Renderizar
+// ========================================
+
+function renderPayments() {
+
+    paymentsTable.innerHTML = "";
+
+    payments.forEach(payment => {
+
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+
+            <td>${payment.aluno}</td>
+
+            <td>R$ ${Number(payment.valor).toFixed(2)}</td>
+
+            <td>${payment.vencimento}</td>
+
+            <td>${payment.status}</td>
+
+            <td>
+
+                <button
+                    class="edit-btn"
+                    data-id="${payment.id}">
+                    Editar
+                </button>
+
+                <button
+                    class="delete-btn"
+                    data-id="${payment.id}">
+                    Excluir
+                </button>
+
+            </td>
+
         `;
+
+        paymentsTable.appendChild(row);
 
     });
 
 }
 
-paymentForm.addEventListener("submit", function(event){
+// ========================================
+// Salvar
+// ========================================
+
+paymentForm.addEventListener("submit", async function (event) {
 
     event.preventDefault();
 
     const payment = {
-
-        id: Date.now(),
 
         aluno: alunoSelect.value,
 
@@ -61,97 +146,81 @@ paymentForm.addEventListener("submit", function(event){
 
     };
 
-    if(editingId === null){
+    try {
 
-        payments.push(payment);
+        if (editingId == null) {
 
-    }else{
+            await fetch(API_PAGAMENTOS, {
 
-        const index = payments.findIndex(payment => payment.id === editingId);
+                method: "POST",
 
-        payment.id = editingId;
+                headers: {
 
-        payments[index] = payment;
+                    "Content-Type": "application/json"
 
-        editingId = null;
+                },
 
-        paymentForm.querySelector("button[type='submit']").textContent = "Salvar";
+                body: JSON.stringify(payment)
+
+            });
+
+            alert("Pagamento cadastrado!");
+
+        } else {
+
+            await fetch(`${API_PAGAMENTOS}/${editingId}`, {
+
+                method: "PUT",
+
+                headers: {
+
+                    "Content-Type": "application/json"
+
+                },
+
+                body: JSON.stringify(payment)
+
+            });
+
+            alert("Pagamento atualizado!");
+
+            editingId = null;
+
+            paymentForm.querySelector("button[type='submit']").textContent = "Salvar";
+
+        }
+
+        paymentForm.reset();
+
+        loadPayments();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Erro ao salvar pagamento.");
 
     }
 
-    savePayments();
-
-    renderPayments();
-
-    paymentForm.reset();
-
 });
 
-function savePayments(){
+// ========================================
+// Excluir / Editar
+// ========================================
 
-    localStorage.setItem("payments", JSON.stringify(payments));
-
-}
-
-function renderPayments(){
-
-    paymentsTable.innerHTML = "";
-
-    payments.forEach(payment=>{
-
-        const row = document.createElement("tr");
-
-        row.innerHTML = `
-
-            <td>${payment.aluno}</td>
-
-            <td>R$ ${payment.valor.toFixed(2)}</td>
-
-            <td>${payment.vencimento}</td>
-
-            <td>${payment.status}</td>
-
-            <td>
-
-                <button
-                    class="edit-btn"
-                    data-id="${payment.id}">
-
-                    Editar
-
-                </button>
-
-                <button
-                    class="delete-btn"
-                    data-id="${payment.id}">
-
-                    Excluir
-
-                </button>
-
-            </td>
-
-        `;
-
-        paymentsTable.appendChild(row);
-
-    });
-
-}
-
-paymentsTable.addEventListener("click", function(event){
+paymentsTable.addEventListener("click", function (event) {
 
     const button = event.target;
 
     const id = Number(button.dataset.id);
 
-    if(button.classList.contains("delete-btn")){
+    if (button.classList.contains("delete-btn")) {
 
         deletePayment(id);
 
     }
 
-    if(button.classList.contains("edit-btn")){
+    if (button.classList.contains("edit-btn")) {
 
         editPayment(id);
 
@@ -159,27 +228,47 @@ paymentsTable.addEventListener("click", function(event){
 
 });
 
-function deletePayment(id){
+// ========================================
+// Excluir
+// ========================================
 
-    if(!confirm("Deseja excluir este pagamento?")){
+async function deletePayment(id) {
+
+    if (!confirm("Deseja excluir este pagamento?")) {
 
         return;
 
     }
 
-    payments = payments.filter(payment => payment.id !== id);
+    try {
 
-    savePayments();
+        await fetch(`${API_PAGAMENTOS}/${id}`, {
 
-    renderPayments();
+            method: "DELETE"
+
+        });
+
+        loadPayments();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Erro ao excluir pagamento.");
+
+    }
 
 }
 
-function editPayment(id){
+// ========================================
+// Editar
+// ========================================
 
-    const payment = payments.find(payment => payment.id === id);
+function editPayment(id) {
 
-    if(!payment){
+    const payment = payments.find(p => p.id === id);
+
+    if (!payment) {
 
         return;
 
@@ -200,3 +289,11 @@ function editPayment(id){
     paymentForm.querySelector("button[type='submit']").textContent = "Atualizar";
 
 }
+
+// ========================================
+// Inicialização
+// ========================================
+
+loadStudents();
+
+loadPayments();

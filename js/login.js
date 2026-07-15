@@ -1,76 +1,58 @@
+const API_URL = "https://gymmanager-production-53e7.up.railway.app/auth/login";
+
 const form = document.getElementById("loginForm");
 
-const email = document.getElementById("email");
+const registerButton = document.getElementById("registerButton");
 
-const password = document.getElementById("password");
+registerButton.addEventListener("click", () => {
 
-const togglePassword = document.getElementById("togglePassword");
-
-// Mostrar senha
-
-togglePassword.addEventListener("click", () => {
-
-    if(password.type === "password"){
-
-        password.type = "text";
-        togglePassword.textContent = "🙈";
-
-    }else{
-
-        password.type = "password";
-        togglePassword.textContent = "👁";
-
-    }
+    window.location.href = "cadastro.html";
 
 });
 
-// Login
-
-form.addEventListener("submit", function(event){
+form.addEventListener("submit", async function(event){
 
     event.preventDefault();
 
-    document.querySelector(".message")?.remove();
+    const email = document.getElementById("email").value;
 
-    if(email.value.trim() === ""){
+    const senha = document.getElementById("password").value;
 
-        showMessage("Informe seu e-mail.","error");
-        return;
+    try{
+
+        const response = await fetch(API_URL,{
+
+            method:"POST",
+
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body:JSON.stringify({
+                email,
+                senha
+            })
+
+        });
+
+        if(!response.ok){
+
+            throw new Error("E-mail ou senha inválidos.");
+
+        }
+
+        const usuario = await response.json();
+
+        localStorage.setItem("usuario", JSON.stringify(usuario));
+
+        alert("Login realizado com sucesso!");
+
+        window.location.href="dashboard.html";
+
+    }catch(error){
+
+        alert(error.message);
 
     }
-
-    if(password.value.trim() === ""){
-
-        showMessage("Informe sua senha.","error");
-        return;
-
-    }
-
-    const loginButton = document.getElementById("loginButton");
-
-loginButton.disabled = true;
-loginButton.textContent = "Entrando...";
-
-    // Simulação da resposta do servidor
-
-    setTimeout(()=>{
-
-        showMessage("Login realizado com sucesso!","success");
-
-loginButton.disabled = false;
-loginButton.textContent = "Entrar";
-    },2000);
 
 });
-
-function showMessage(text,type){
-
-    const message = document.createElement("div");
-
-    message.className = `message ${type}`;
-
-    message.textContent = text;
-
-    form.appendChild(message);
-
-}

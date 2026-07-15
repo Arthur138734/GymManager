@@ -282,3 +282,50 @@ font-size:30px;
     color:#16A34A;
 
 }
+
+.register-button{
+
+    width:100%;
+    margin-top:15px;
+    padding:14px;
+
+    border:none;
+    border-radius:8px;
+
+    background:#16a34a;
+
+    color:white;
+
+    font-size:16px;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.register-button:hover{
+
+    background:#15803d;
+
+}
+
+.forgot-password{
+
+    display:block;
+
+    text-align:center;
+
+    margin-top:20px;
+
+    text-decoration:none;
+
+    color:#2563eb;
+
+}
+
+.forgot-password:hover{
+
+    text-decoration:underline;
+
+}

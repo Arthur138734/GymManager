@@ -1,0 +1,119 @@
+package com.gymmanager.model;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "configuracoes")
+public class Configuracao {
+
+    @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+            private Long id;
+
+                private String nomeAcademia;
+
+                    private String cnpj;
+
+                        private String telefone;
+
+                            private String email;
+
+                                private String endereco;
+
+                                    private String site;
+
+                                        private String horarioFuncionamento;
+
+                                            private String logo;
+
+                                                public Configuracao() {
+                                                    }
+
+                                                        public Configuracao(Long id, String nomeAcademia, String cnpj,
+                                                                                String telefone, String email,
+                                                                                                        String endereco, String site,
+                                                                                                                                String horarioFuncionamento, String logo) {
+
+                                                                                                                                        this.id = id;
+                                                                                                                                                this.nomeAcademia = nomeAcademia;
+                                                                                                                                                        this.cnpj = cnpj;
+                                                                                                                                                                this.telefone = telefone;
+                                                                                                                                                                        this.email = email;
+                                                                                                                                                                                this.endereco = endereco;
+                                                                                                                                                                                        this.site = site;
+                                                                                                                                                                                                this.horarioFuncionamento = horarioFuncionamento;
+                                                                                                                                                                                                        this.logo = logo;
+                                                                                                                                                                                                            }
+
+                                                                                                                                                                                                                public Long getId() {
+                                                                                                                                                                                                                        return id;
+                                                                                                                                                                                                                            }
+
+                                                                                                                                                                                                                                public void setId(Long id) {
+                                                                                                                                                                                                                                        this.id = id;
+                                                                                                                                                                                                                                            }
+
+                                                                                                                                                                                                                                                public String getNomeAcademia() {
+                                                                                                                                                                                                                                                        return nomeAcademia;
+                                                                                                                                                                                                                                                            }
+
+                                                                                                                                                                                                                                                                public void setNomeAcademia(String nomeAcademia) {
+                                                                                                                                                                                                                                                                        this.nomeAcademia = nomeAcademia;
+                                                                                                                                                                                                                                                                            }
+
+                                                                                                                                                                                                                                                                                public String getCnpj() {
+                                                                                                                                                                                                                                                                                        return cnpj;
+                                                                                                                                                                                                                                                                                            }
+
+                                                                                                                                                                                                                                                                                                public void setCnpj(String cnpj) {
+                                                                                                                                                                                                                                                                                                        this.cnpj = cnpj;
+                                                                                                                                                                                                                                                                                                            }
+
+                                                                                                                                                                                                                                                                                                                public String getTelefone() {
+                                                                                                                                                                                                                                                                                                                        return telefone;
+                                                                                                                                                                                                                                                                                                                            }
+
+                                                                                                                                                                                                                                                                                                                                public void setTelefone(String telefone) {
+                                                                                                                                                                                                                                                                                                                                        this.telefone = telefone;
+                                                                                                                                                                                                                                                                                                                                            }
+
+                                                                                                                                                                                                                                                                                                                                                public String getEmail() {
+                                                                                                                                                                                                                                                                                                                                                        return email;
+                                                                                                                                                                                                                                                                                                                                                            }
+
+                                                                                                                                                                                                                                                                                                                                                                public void setEmail(String email) {
+                                                                                                                                                                                                                                                                                                                                                                        this.email = email;
+                                                                                                                                                                                                                                                                                                                                                                            }
+
+                                                                                                                                                                                                                                                                                                                                                                                public String getEndereco() {
+                                                                                                                                                                                                                                                                                                                                                                                        return endereco;
+                                                                                                                                                                                                                                                                                                                                                                                            }
+
+                                                                                                                                                                                                                                                                                                                                                                                                public void setEndereco(String endereco) {
+                                                                                                                                                                                                                                                                                                                                                                                                        this.endereco = endereco;
+                                                                                                                                                                                                                                                                                                                                                                                                            }
+
+                                                                                                                                                                                                                                                                                                                                                                                                                public String getSite() {
+                                                                                                                                                                                                                                                                                                                                                                                                                        return site;
+                                                                                                                                                                                                                                                                                                                                                                                                                            }
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                public void setSite(String site) {
+                                                                                                                                                                                                                                                                                                                                                                                                                                        this.site = site;
+                                                                                                                                                                                                                                                                                                                                                                                                                                            }
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                public String getHorarioFuncionamento() {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                        return horarioFuncionamento;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                            }
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                public void setHorarioFuncionamento(String horarioFuncionamento) {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        this.horarioFuncionamento = horarioFuncionamento;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                            }
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                public String getLogo() {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        return logo;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            }
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                public void setLogo(String logo) {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        this.logo = logo;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            }
