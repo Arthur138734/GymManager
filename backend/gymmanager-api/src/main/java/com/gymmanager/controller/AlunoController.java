@@ -41,4 +41,11 @@ public class AlunoController {
     public void excluir(@PathVariable Long id) {
         service.excluir(id);
     }
+
+    @GetMapping("/pesquisar")
+    public List<Aluno> pesquisar(@RequestParam String nome){
+
+        return service.pesquisar(nome);
+
+        }
 }

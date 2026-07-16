@@ -50,4 +50,10 @@ public class AlunoService {
 
         return repository.save(aluno);
     }
+
+    public List<Aluno> pesquisar(String nome){
+
+        return repository.findByNomeContainingIgnoreCase(nome);
+
+        }
 }

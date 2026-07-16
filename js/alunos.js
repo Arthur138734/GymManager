@@ -9,10 +9,54 @@ const API_URL = "https://gymmanager-production-53e7.up.railway.app/alunos";
 const studentForm = document.getElementById("studentForm");
 const studentsTable = document.getElementById("studentsTable");
 const searchStudent = document.getElementById("searchStudent");
+const searchStudent = document.getElementById("searchStudent");
+
+searchStudent.addEventListener("input", () => {
+
+    listarAlunos(searchStudent.value);
+
+});
 
 // Lista de alunos
 let students = [];
 let editingId = null;
+
+async function listarAlunos(filtro = "") {
+
+    const response = await fetch(API_ALUNOS);
+
+    const alunos = await response.json();
+
+    const filtrados = alunos.filter(aluno =>
+
+        aluno.nome.toLowerCase().includes(filtro.toLowerCase()) ||
+
+        aluno.cpf.toLowerCase().includes(filtro.toLowerCase()) ||
+
+        aluno.email.toLowerCase().includes(filtro.toLowerCase())
+
+    );
+
+    studentsTable.innerHTML = "";
+
+    filtrados.forEach(aluno => {
+
+        studentsTable.innerHTML += `
+            <tr>
+                <td>${aluno.nome}</td>
+                <td>${aluno.telefone}</td>
+                <td>${aluno.objetivo}</td>
+                <td>Ativo</td>
+                <td>
+                    <button onclick="editar(${aluno.id})">Editar</button>
+                    <button onclick="excluir(${aluno.id})">Excluir</button>
+                </td>
+            </tr>
+        `;
+
+    });
+
+}
 
 // ===============================
 // Carregar alunos da API
@@ -93,76 +137,32 @@ searchStudent.addEventListener("input", () => {
 // Salvar / Atualizar
 // ===============================
 
-studentForm.addEventListener("submit", async function (event) {
+const API_PESQUISA =
+    "https://gymmanager-production-53e7.up.railway.app/alunos/pesquisar";
 
-    event.preventDefault();
+    const campoPesquisa = document.getElementById("searchStudent");
 
-    const student = {
+    campoPesquisa.addEventListener("input", pesquisarAluno);
 
-        nome: document.getElementById("nome").value,
-        cpf: document.getElementById("cpf").value,
-        telefone: document.getElementById("telefone").value,
-        email: document.getElementById("email").value,
-        peso: parseFloat(document.getElementById("peso").value),
-        altura: parseFloat(document.getElementById("altura").value),
-        objetivo: document.getElementById("objetivo").value,
-        status: "Ativo"
+    async function pesquisarAluno(){
 
-    };
+        const nome = campoPesquisa.value.trim();
 
-    try {
+            if(nome === ""){
 
-        if (editingId == null) {
+                    listarAlunos();
 
-            await fetch(API_URL, {
+                            return;
 
-                method: "POST",
+                                }
 
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                                    const response = await fetch(`${API_PESQUISA}?nome=${encodeURIComponent(nome)}`);
 
-                body: JSON.stringify(student)
+                                        const alunos = await response.json();
 
-            });
+                                            renderizarTabela(alunos);
 
-            alert("Aluno cadastrado!");
-
-        } else {
-
-            await fetch(`${API_URL}/${editingId}`, {
-
-                method: "PUT",
-
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify(student)
-
-            });
-
-            alert("Aluno atualizado!");
-
-            editingId = null;
-
-            document.querySelector(".buttons button[type='submit']").textContent = "Salvar";
-
-        }
-
-        studentForm.reset();
-
-        carregarAlunos();
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert("Erro ao salvar aluno.");
-
-    }
-
-});
+                                            }
 
 // ===============================
 // Eventos da tabela

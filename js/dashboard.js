@@ -170,6 +170,74 @@ function carregarGraficoObjetivos() {
 // GRÁFICO PAGAMENTOS
 // ===========================
 
+async function criarGraficoReceita(){
+
+    const response = await fetch(API_PAGAMENTOS);
+
+    const pagamentos = await response.json();
+
+    const meses = [
+
+        "Jan","Fev","Mar","Abr","Mai","Jun",
+
+        "Jul","Ago","Set","Out","Nov","Dez"
+
+    ];
+
+    const receitas = new Array(12).fill(0);
+
+    pagamentos.forEach(pagamento=>{
+
+        if(pagamento.status !== "Pago") return;
+
+        const data = new Date(pagamento.vencimento);
+
+        const mes = data.getMonth();
+
+        receitas[mes] += pagamento.valor;
+
+    });
+
+    new Chart(document.getElementById("receitaChart"),{
+
+        type:"bar",
+
+        data:{
+
+            labels:meses,
+
+            datasets:[{
+
+                label:"Receita (R$)",
+
+                data:receitas,
+
+                borderWidth:1
+
+            }]
+
+        },
+
+        options:{
+
+            responsive:true,
+
+            plugins:{
+
+                legend:{
+
+                    display:false
+
+                }
+
+            }
+
+        }
+
+    });
+
+}
+
 function carregarGraficoPagamentos() {
 
     const pagamentos = JSON.parse(localStorage.getItem("payments")) || [];
@@ -219,3 +287,92 @@ function carregarGraficoPagamentos() {
 
 carregarGraficoObjetivos();
 carregarGraficoPagamentos();
+criarGraficoReceita();
+
+async function criarGraficoObjetivos() {
+
+    const response = await fetch(API_ALUNOS);
+
+    const alunos = await response.json();
+
+    let hipertrofia = 0;
+    let emagrecimento = 0;
+    let condicionamento = 0;
+    let reabilitacao = 0;
+
+    alunos.forEach(aluno => {
+
+        switch (aluno.objetivo) {
+
+            case "Hipertrofia":
+                hipertrofia++;
+                break;
+
+            case "Emagrecimento":
+                emagrecimento++;
+                break;
+
+            case "Condicionamento":
+                condicionamento++;
+                break;
+
+            case "Reabilitação":
+                reabilitacao++;
+                break;
+
+        }
+
+    });
+
+    new Chart(document.getElementById("objetivoChart"), {
+
+        type: "doughnut",
+
+        data: {
+
+            labels: [
+
+                "Hipertrofia",
+                "Emagrecimento",
+                "Condicionamento",
+                "Reabilitação"
+
+            ],
+
+            datasets: [{
+
+                data: [
+
+                    hipertrofia,
+                    emagrecimento,
+                    condicionamento,
+                    reabilitacao
+
+                ]
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            plugins: {
+
+                legend: {
+
+                    position: "bottom"
+
+                }
+
+            }
+
+        }
+
+    });
+
+}
+
+criarGraficoReceita();
+criarGraficoObjetivos();
