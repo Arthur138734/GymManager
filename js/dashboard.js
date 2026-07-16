@@ -98,3 +98,124 @@ document.getElementById("logout").addEventListener("click", function (event) {
     window.location.href = "login.html";
 
 });
+
+// ===========================
+// GRÁFICO DE OBJETIVOS
+// ===========================
+
+function carregarGraficoObjetivos() {
+
+    const alunos = JSON.parse(localStorage.getItem("students")) || [];
+
+    let hipertrofia = 0;
+    let emagrecimento = 0;
+    let condicionamento = 0;
+    let reabilitacao = 0;
+
+    alunos.forEach(aluno => {
+
+        switch (aluno.objetivo) {
+
+            case "Hipertrofia":
+                hipertrofia++;
+                break;
+
+            case "Emagrecimento":
+                emagrecimento++;
+                break;
+
+            case "Condicionamento":
+                condicionamento++;
+                break;
+
+            case "Reabilitação":
+                reabilitacao++;
+                break;
+
+        }
+
+    });
+
+    new Chart(document.getElementById("graficoObjetivos"), {
+
+        type: "pie",
+
+        data: {
+
+            labels: [
+                "Hipertrofia",
+                "Emagrecimento",
+                "Condicionamento",
+                "Reabilitação"
+            ],
+
+            datasets: [{
+
+                data: [
+                    hipertrofia,
+                    emagrecimento,
+                    condicionamento,
+                    reabilitacao
+                ]
+
+            }]
+
+        }
+
+    });
+
+}
+
+// ===========================
+// GRÁFICO PAGAMENTOS
+// ===========================
+
+function carregarGraficoPagamentos() {
+
+    const pagamentos = JSON.parse(localStorage.getItem("payments")) || [];
+
+    let pagos = 0;
+    let pendentes = 0;
+
+    pagamentos.forEach(p => {
+
+        if (p.status === "Pago") {
+
+            pagos++;
+
+        } else {
+
+            pendentes++;
+
+        }
+
+    });
+
+    new Chart(document.getElementById("graficoPagamentos"), {
+
+        type: "doughnut",
+
+        data: {
+
+            labels: [
+                "Pagos",
+                "Pendentes"
+            ],
+
+            datasets: [{
+
+                data: [
+                    pagos,
+                    pendentes
+                ]
+
+            }]
+
+        }
+
+    });
+
+}
+
+carregarGraficoObjetivos();
+carregarGraficoPagamentos();

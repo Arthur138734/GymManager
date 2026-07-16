@@ -52,6 +52,12 @@
                     </li>
 
                     <li>
+                            <a href="exercicios.html">
+                                    🏋️ Exercícios
+                                        </a>
+                                        </li>
+
+                    <li>
                         <a href="pagamentos.html">
                             💳 Pagamentos
                         </a>
@@ -64,7 +70,7 @@
                     </li>
 
                     <li>
-                        <a href="#" id="logout">
+                        <a href="login.html" id="logout">
     🚪 Sair
 </a>
                     </li>
@@ -163,28 +169,31 @@
 
             </section>
 
-            <!-- ÁREA PRINCIPAL -->
 
-            <section class="main-content">
+<section class="main-content">
 
-                <div class="panel">
+    <div class="panel">
 
-                    <h2>Resumo da Academia</h2>
+        <h2>Resumo da Academia</h2>
 
-                    <p>
-                        Aqui futuramente exibiremos gráficos,
-                        alunos ativos, pagamentos e outras
-                        informações importantes.
-                    </p>
+        <canvas id="graficoObjetivos"></canvas>
 
-                </div>
+    </div>
 
-            </section>
+    <div class="panel">
 
+        <h2>Pagamentos</h2>
+
+        <canvas id="graficoPagamentos"></canvas>
+
+    </div>
+
+</section>
         </main>
 
     </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/dashboard.js"></script>
 
 </body>
