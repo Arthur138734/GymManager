@@ -15,19 +15,23 @@ public class TreinoService {
         this.repository = repository;
     }
 
+    // Listar todos
     public List<Treino> listarTodos() {
         return repository.findAll();
     }
 
+    // Buscar por ID
     public Treino buscarPorId(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Treino não encontrado"));
     }
 
+    // Salvar
     public Treino salvar(Treino treino) {
         return repository.save(treino);
     }
 
+    // Atualizar
     public Treino atualizar(Long id, Treino treino) {
 
         Treino existente = buscarPorId(id);
@@ -42,8 +46,13 @@ public class TreinoService {
         return repository.save(existente);
     }
 
+    // Excluir
     public void excluir(Long id) {
         repository.deleteById(id);
     }
 
+    // Pesquisar
+    public List<Treino> pesquisar(String nome) {
+        return repository.findByNomeContainingIgnoreCase(nome);
+    }
 }

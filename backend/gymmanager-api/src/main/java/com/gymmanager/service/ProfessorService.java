@@ -15,43 +15,46 @@ public class ProfessorService {
         this.repository = repository;
     }
 
+    // Listar todos
     public List<Professor> listarTodos() {
         return repository.findAll();
     }
 
+    // Buscar por ID
     public Professor buscarPorId(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Professor não encontrado"));
     }
 
+    // Salvar
     public Professor salvar(Professor professor) {
         return repository.save(professor);
     }
 
+    // Atualizar
     public Professor atualizar(Long id, Professor professor) {
 
-    Professor existente = buscarPorId(id);
+        Professor existente = buscarPorId(id);
 
-    existente.setNome(professor.getNome());
-    existente.setCpf(professor.getCpf());
-    existente.setTelefone(professor.getTelefone());
-    existente.setEmail(professor.getEmail());
-    existente.setEspecialidade(professor.getEspecialidade());
-    existente.setCref(professor.getCref());
-    existente.setSalario(professor.getSalario());
-    existente.setStatus(professor.getStatus());
+        existente.setNome(professor.getNome());
+        existente.setCpf(professor.getCpf());
+        existente.setTelefone(professor.getTelefone());
+        existente.setEmail(professor.getEmail());
+        existente.setEspecialidade(professor.getEspecialidade());
+        existente.setCref(professor.getCref());
+        existente.setSalario(professor.getSalario());
+        existente.setStatus(professor.getStatus());
 
-    return repository.save(existente);
+        return repository.save(existente);
+    }
 
-}
-
+    // Excluir
     public void excluir(Long id) {
         repository.deleteById(id);
     }
-}
 
-public List<Professor> pesquisar(String nome){
-
+    // Pesquisar
+    public List<Professor> pesquisar(String nome) {
         return repository.findByNomeContainingIgnoreCase(nome);
-
-        }
+    }
+}

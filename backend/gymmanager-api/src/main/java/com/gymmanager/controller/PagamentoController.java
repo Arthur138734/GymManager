@@ -44,6 +44,9 @@ public class PagamentoController {
                                                                                                                                                    service.excluir(id);
                                                                                                                                                        }
 
-                                                                                                                                                       @GetMapping("/pesquisar")
+                                                        @GetMapping("/pesquisar")
+                                                        public List<Pagamento> pesquisar(@RequestParam String nome) {
+                                                            return service.pesquisar(nome);
+                                                            }
 
                                                                                                                                                        }

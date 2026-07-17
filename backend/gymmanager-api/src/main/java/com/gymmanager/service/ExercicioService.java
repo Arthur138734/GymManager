@@ -15,36 +15,45 @@ public class ExercicioService {
                 this.repository = repository;
                     }
 
-                        public List<Exercicio> listarTodos() {
-                                return repository.findAll();
-                                    }
+                        // Listar todos
+                            public List<Exercicio> listarTodos() {
+                                    return repository.findAll();
+                                        }
 
-                                        public Exercicio buscarPorId(Long id) {
-                                                return repository.findById(id)
-                                                                .orElseThrow(() -> new RuntimeException("Exercício não encontrado"));
-                                                                    }
+                                            // Buscar por ID
+                                                public Exercicio buscarPorId(Long id) {
+                                                        return repository.findById(id)
+                                                                        .orElseThrow(() -> new RuntimeException("Exercício não encontrado"));
+                                                                            }
 
-                                                                        public Exercicio salvar(Exercicio exercicio) {
-                                                                                return repository.save(exercicio);
-                                                                                    }
+                                                                                // Salvar
+                                                                                    public Exercicio salvar(Exercicio exercicio) {
+                                                                                            return repository.save(exercicio);
+                                                                                                }
 
-                                                                                        public Exercicio atualizar(Long id, Exercicio exercicio) {
+                                                                                                    // Atualizar
+                                                                                                        public Exercicio atualizar(Long id, Exercicio exercicio) {
 
-                                                                                                Exercicio existente = buscarPorId(id);
+                                                                                                                Exercicio existente = buscarPorId(id);
 
-                                                                                                        existente.setTreinoId(exercicio.getTreinoId());
-                                                                                                                existente.setNome(exercicio.getNome());
-                                                                                                                        existente.setSeries(exercicio.getSeries());
-                                                                                                                                existente.setRepeticoes(exercicio.getRepeticoes());
-                                                                                                                                        existente.setCarga(exercicio.getCarga());
-                                                                                                                                                existente.setDescanso(exercicio.getDescanso());
-                                                                                                                                                        existente.setObservacoes(exercicio.getObservacoes());
+                                                                                                                        existente.setTreinoId(exercicio.getTreinoId());
+                                                                                                                                existente.setNome(exercicio.getNome());
+                                                                                                                                        existente.setSeries(exercicio.getSeries());
+                                                                                                                                                existente.setRepeticoes(exercicio.getRepeticoes());
+                                                                                                                                                        existente.setCarga(exercicio.getCarga());
+                                                                                                                                                                existente.setDescanso(exercicio.getDescanso());
+                                                                                                                                                                        existente.setObservacoes(exercicio.getObservacoes());
 
-                                                                                                                                                                return repository.save(existente);
-                                                                                                                                                                    }
-
-                                                                                                                                                                        public void excluir(Long id) {
-                                                                                                                                                                                repository.deleteById(id);
+                                                                                                                                                                                return repository.save(existente);
                                                                                                                                                                                     }
 
-                                                                                                                                                                                    }
+                                                                                                                                                                                        // Excluir
+                                                                                                                                                                                            public void excluir(Long id) {
+                                                                                                                                                                                                    repository.deleteById(id);
+                                                                                                                                                                                                        }
+
+                                                                                                                                                                                                            // Pesquisar
+                                                                                                                                                                                                                public List<Exercicio> pesquisar(String nome) {
+                                                                                                                                                                                                                        return repository.findByNomeContainingIgnoreCase(nome);
+                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                            }

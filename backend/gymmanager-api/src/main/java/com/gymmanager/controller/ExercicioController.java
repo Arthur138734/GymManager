@@ -43,5 +43,8 @@ public class ExercicioController {
         service.excluir(id);
     }
 
-    @GetMapping("/pesquisar")
+@GetMapping("/pesquisar")
+public List<Exercicio> pesquisar(@RequestParam String nome) {
+    return service.pesquisar(nome);
+    }
 }
