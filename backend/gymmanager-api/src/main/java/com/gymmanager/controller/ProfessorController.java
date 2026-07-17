@@ -43,3 +43,10 @@ public class ProfessorController {
         service.excluir(id);
     }
 }
+
+@GetMapping("/pesquisar")
+public List<Professor> pesquisar(@RequestParam String nome){
+
+    return service.pesquisar(nome);
+
+    }

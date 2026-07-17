@@ -49,3 +49,9 @@ public class ProfessorService {
         repository.deleteById(id);
     }
 }
+
+public List<Professor> pesquisar(String nome){
+
+        return repository.findByNomeContainingIgnoreCase(nome);
+
+        }

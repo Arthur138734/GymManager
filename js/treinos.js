@@ -258,3 +258,10 @@ function editTreino(id) {
 carregarAlunos();
 carregarProfessores();
 carregarTreinos();
+renderTreinos();
+
+carregarTreinos();
+
+editarTreino();
+
+excluirTreino();

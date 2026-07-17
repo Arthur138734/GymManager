@@ -44,4 +44,6 @@ public class PagamentoController {
                                                                                                                                                    service.excluir(id);
                                                                                                                                                        }
 
+                                                                                                                                                       @GetMapping("/pesquisar")
+
                                                                                                                                                        }

@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ExercicioRepository extends JpaRepository<Exercicio, Long> {
+    List<Exercicio> findByNomeContainingIgnoreCase(String nome);
 }

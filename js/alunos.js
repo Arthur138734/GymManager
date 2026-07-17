@@ -1,66 +1,39 @@
-// ===============================
+// =====================================
 // GymManager - Cadastro de Alunos
-// ===============================
+// =====================================
 
-// URL da API
 const API_URL = "https://gymmanager-production-53e7.up.railway.app/alunos";
 
-// Elementos
 const studentForm = document.getElementById("studentForm");
 const studentsTable = document.getElementById("studentsTable");
 const searchStudent = document.getElementById("searchStudent");
-const searchStudent = document.getElementById("searchStudent");
 
-searchStudent.addEventListener("input", () => {
-
-    listarAlunos(searchStudent.value);
-
-});
-
-// Lista de alunos
 let students = [];
 let editingId = null;
 
-async function listarAlunos(filtro = "") {
+// ===========================
+// Inicialização
+// ===========================
 
-    const response = await fetch(API_ALUNOS);
+document.addEventListener("DOMContentLoaded", () => {
 
-    const alunos = await response.json();
+    carregarAlunos();
 
-    const filtrados = alunos.filter(aluno =>
+});
 
-        aluno.nome.toLowerCase().includes(filtro.toLowerCase()) ||
+// ===========================
+// Pesquisa
+// ===========================
 
-        aluno.cpf.toLowerCase().includes(filtro.toLowerCase()) ||
+searchStudent.addEventListener("input", () => {
 
-        aluno.email.toLowerCase().includes(filtro.toLowerCase())
+    renderStudents(searchStudent.value);
 
-    );
+});
 
-    studentsTable.innerHTML = "";
-
-    filtrados.forEach(aluno => {
-
-        studentsTable.innerHTML += `
-            <tr>
-                <td>${aluno.nome}</td>
-                <td>${aluno.telefone}</td>
-                <td>${aluno.objetivo}</td>
-                <td>Ativo</td>
-                <td>
-                    <button onclick="editar(${aluno.id})">Editar</button>
-                    <button onclick="excluir(${aluno.id})">Excluir</button>
-                </td>
-            </tr>
-        `;
-
-    });
-
-}
-
-// ===============================
-// Carregar alunos da API
-// ===============================
+// ===========================
+// Buscar alunos da API
+// ===========================
 
 async function carregarAlunos() {
 
@@ -70,7 +43,7 @@ async function carregarAlunos() {
 
         students = await response.json();
 
-        renderStudents(searchStudent.value);
+        renderStudents();
 
     } catch (error) {
 
@@ -82,130 +55,200 @@ async function carregarAlunos() {
 
 }
 
-// ===============================
-// Mostrar alunos
-// ===============================
+// ===========================
+// Mostrar tabela
+// ===========================
 
-function renderStudents(search = "") {
+function renderStudents(filtro = "") {
 
     studentsTable.innerHTML = "";
 
-    const filtered = students.filter(student =>
-        student.nome.toLowerCase().includes(search.toLowerCase())
+    const lista = students.filter(aluno =>
+
+        aluno.nome.toLowerCase().includes(filtro.toLowerCase()) ||
+
+        aluno.cpf.toLowerCase().includes(filtro.toLowerCase()) ||
+
+        aluno.email.toLowerCase().includes(filtro.toLowerCase())
+
     );
 
-    filtered.forEach(student => {
+    lista.forEach(aluno => {
 
-        const row = document.createElement("tr");
+        studentsTable.innerHTML += `
 
-        row.innerHTML = `
-            <td>${student.nome}</td>
-            <td>${student.telefone}</td>
-            <td>${student.objetivo}</td>
-            <td>${student.status}</td>
+        <tr>
 
-            <td>
+            <td>${aluno.nome}</td>
 
-                <button class="edit-btn" data-id="${student.id}">
-                    Editar
-                </button>
+            <td>${aluno.telefone}</td>
 
-                <button class="delete-btn" data-id="${student.id}">
-                    Excluir
-                </button>
+            <td>${aluno.objetivo}</td>
 
-            </td>
+            <td>${aluno.status}</td>
+
+<td>
+
+    <button
+        class="edit-btn"
+        onclick="editarAluno(${aluno.id})">
+
+        Editar
+
+    </button>
+
+    <button
+        class="delete-btn"
+        onclick="excluirAluno(${aluno.id})">
+
+        Excluir
+
+    </button>
+
+</td>
+            
+
+        </tr>
+
         `;
-
-        studentsTable.appendChild(row);
 
     });
 
 }
 
-// ===============================
-// Pesquisa
-// ===============================
+// ===========================
+// Salvar aluno
+// ===========================
 
-searchStudent.addEventListener("input", () => {
+studentForm.addEventListener("submit", async (e) => {
 
-    renderStudents(searchStudent.value);
+    e.preventDefault();
 
-});
+    const aluno = {
 
-// ===============================
-// Salvar / Atualizar
-// ===============================
+        nome: document.getElementById("nome").value,
 
-const API_PESQUISA =
-    "https://gymmanager-production-53e7.up.railway.app/alunos/pesquisar";
+        cpf: document.getElementById("cpf").value,
 
-    const campoPesquisa = document.getElementById("searchStudent");
+        telefone: document.getElementById("telefone").value,
 
-    campoPesquisa.addEventListener("input", pesquisarAluno);
+        email: document.getElementById("email").value,
 
-    async function pesquisarAluno(){
+        peso: Number(document.getElementById("peso").value),
 
-        const nome = campoPesquisa.value.trim();
+        altura: Number(document.getElementById("altura").value),
 
-            if(nome === ""){
+        objetivo: document.getElementById("objetivo").value,
 
-                    listarAlunos();
+        status: "Ativo"
 
-                            return;
+    };
 
-                                }
+    try {
 
-                                    const response = await fetch(`${API_PESQUISA}?nome=${encodeURIComponent(nome)}`);
+        if(editingId == null){
 
-                                        const alunos = await response.json();
+            await fetch(API_URL, {
 
-                                            renderizarTabela(alunos);
+                method: "POST",
 
-                                            }
+                headers: {
 
-// ===============================
-// Eventos da tabela
-// ===============================
+                    "Content-Type": "application/json"
 
-studentsTable.addEventListener("click", function (event) {
+                },
 
-    const button = event.target;
+                body: JSON.stringify(aluno)
 
-    const id = Number(button.dataset.id);
+            });
 
-    if (button.classList.contains("edit-btn")) {
+        } else {
 
-        editStudent(id);
+            await fetch(`${API_URL}/${editingId}`, {
+
+                method: "PUT",
+
+                headers: {
+
+                    "Content-Type": "application/json"
+
+                },
+
+                body: JSON.stringify(aluno)
+
+            });
+
+            editingId = null;
+
+            studentForm.querySelector("button[type='submit']").textContent = "Salvar";
+
+        }
+
+        studentForm.reset();
+
+        carregarAlunos();
+
+    } catch(error){
+
+        console.error(error);
+
+        alert("Erro ao salvar aluno.");
 
     }
 
-    if (button.classList.contains("delete-btn")) {
+});
 
-        deleteStudent(id);
+// ===========================
+// Editar aluno
+// ===========================
+
+async function editarAluno(id) {
+
+    try {
+
+        const response = await fetch(`${API_URL}/${id}`);
+        const aluno = await response.json();
+
+        document.getElementById("nome").value = aluno.nome;
+        document.getElementById("cpf").value = aluno.cpf;
+        document.getElementById("telefone").value = aluno.telefone;
+        document.getElementById("email").value = aluno.email;
+        document.getElementById("peso").value = aluno.peso;
+        document.getElementById("altura").value = aluno.altura;
+        document.getElementById("objetivo").value = aluno.objetivo;
+
+        editingId = aluno.id;
+
+        studentForm.querySelector("button[type='submit']").textContent = "Atualizar";
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+    } catch (error) {
+
+        console.error(error);
+        alert("Erro ao carregar aluno.");
 
     }
 
-});
+}
 
-// ===============================
-// Excluir
-// ===============================
+// ===========================
+// Excluir aluno
+// ===========================
 
-async function deleteStudent(id) {
+async function excluirAluno(id) {
 
-    if (!confirm("Deseja excluir este aluno?")) {
-
+    if (!confirm("Deseja realmente excluir este aluno?")) {
         return;
-
     }
 
     try {
 
         await fetch(`${API_URL}/${id}`, {
-
             method: "DELETE"
-
         });
 
         carregarAlunos();
@@ -213,43 +256,15 @@ async function deleteStudent(id) {
     } catch (error) {
 
         console.error(error);
-
         alert("Erro ao excluir aluno.");
 
     }
 
 }
 
-// ===============================
-// Editar
-// ===============================
+// ===========================
+// Atualizar lista automaticamente
+// ===========================
 
-function editStudent(id) {
-
-    const student = students.find(s => s.id === id);
-
-    if (!student) {
-
-        return;
-
-    }
-
-    document.getElementById("nome").value = student.nome;
-    document.getElementById("cpf").value = student.cpf;
-    document.getElementById("telefone").value = student.telefone;
-    document.getElementById("email").value = student.email;
-    document.getElementById("peso").value = student.peso;
-    document.getElementById("altura").value = student.altura;
-    document.getElementById("objetivo").value = student.objetivo;
-
-    editingId = student.id;
-
-    document.querySelector(".buttons button[type='submit']").textContent = "Atualizar";
-
-}
-
-// ===============================
-// Inicialização
-// ===============================
-
-carregarAlunos();
+window.editarAluno = editarAluno;
+window.excluirAluno = excluirAluno;

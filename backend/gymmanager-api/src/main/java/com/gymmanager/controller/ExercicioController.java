@@ -42,4 +42,6 @@ public class ExercicioController {
     public void excluir(@PathVariable Long id) {
         service.excluir(id);
     }
+
+    @GetMapping("/pesquisar")
 }

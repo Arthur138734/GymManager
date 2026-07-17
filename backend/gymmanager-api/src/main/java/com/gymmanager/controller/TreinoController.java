@@ -41,4 +41,9 @@ public class TreinoController {
                                                                                                             public void excluir(@PathVariable Long id) {
                                                                                                                     service.excluir(id);
                                                                                                                         }
+
+                                                                                                                        @GetMapping("/pesquisar")
+
+
+
                                                                                                                         }
